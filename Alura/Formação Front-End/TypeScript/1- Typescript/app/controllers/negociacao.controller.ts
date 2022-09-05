@@ -1,37 +1,58 @@
-import { Negociacoes } from './../models/negociacoes.js';
-import { Negociacao } from './../models/negociacao.js';
+import { DiasDaSemana } from "./../enums/dias-da-semana.js";
+import { NegociacoesView } from "./../views/negociacoes-view.js";
+import { Negociacoes } from "./../models/negociacoes.js";
+import { Negociacao } from "./../models/negociacao.js";
+import { MensagemView } from "../views/mensagem-view.js";
 export class NegociacaoController {
-  private inputData :HTMLInputElement
-  private inputQuantidade :HTMLInputElement
-  private inputValor:HTMLInputElement
-  private negociacoes = new Negociacoes()
-
-  constructor(){
-  this.inputData  = document.querySelector("#data")
-  this.inputQuantidade  = document.querySelector("#quantidade")
-  this.inputValor  = document.querySelector("#valor")
+  private inputData: HTMLInputElement;
+  private inputQuantidade: HTMLInputElement;
+  private inputValor: HTMLInputElement;
+  private negociacoes = new Negociacoes();
+  private negociacoesView = new NegociacoesView("#negociacoesView");
+  private mensagemView = new MensagemView("#mensagemView");
+  constructor() {
+    this.inputData = document.querySelector("#data");
+    this.inputQuantidade = document.querySelector("#quantidade");
+    this.inputValor = document.querySelector("#valor");
+    this.negociacoesView.update(this.negociacoes);
   }
 
-  adicionar():void{
-    const negociacao = this.ciarNegociacao()
-    this.negociacoes.adiciona(negociacao)
-    console.log(this.negociacoes.lista())
-    this.limparFormulario()
+  adicionar(): void {
+    const negociacao = this.ciarNegociacao();
+    if (!this.ehDiaUtil(negociacao.data)) {
+      this.mensagemView.update("Apenas negociações em dias uteis sao aceitas");
+      return;
+    }
+    this.negociacoes.adiciona(negociacao);
+    this.limparFormulario();
+    this.atualizaView();
   }
 
-    ciarNegociacao(): Negociacao{
-const exp = /"-"/g;
-const date = new Date(this.inputData.value.replace(exp,","))
-const quantidade = parseInt(this.inputQuantidade.value)
-const valor = parseFloat(this.inputValor.value)
+  private ehDiaUtil(data: Date) {
+    return (
+      data.getDay() > DiasDaSemana.DOMINGO &&
+      data.getDay() < DiasDaSemana.SABADO
+    );
+  }
 
-    return new Negociacao(date,quantidade,valor)
-    }
+  private ciarNegociacao(): Negociacao {
+    const exp = /"-"/g;
+    const date = new Date(this.inputData.value.replace(exp, ","));
+    const quantidade = parseInt(this.inputQuantidade.value);
+    const valor = parseFloat(this.inputValor.value);
 
-    limparFormulario():void {
-      this.inputData.value = ""
-      this.inputQuantidade.value = ""
-      this.inputValor.value = ""
-      this.inputData.focus()
-    }
+    return new Negociacao(date, quantidade, valor);
+  }
+
+  private limparFormulario(): void {
+    this.inputData.value = "";
+    this.inputQuantidade.value = "";
+    this.inputValor.value = "";
+    this.inputData.focus();
+  }
+
+  private atualizaView(): void {
+    this.negociacoesView.update(this.negociacoes);
+    this.mensagemView.update("Negociação adicionada com sucesso.");
+  }
 }
