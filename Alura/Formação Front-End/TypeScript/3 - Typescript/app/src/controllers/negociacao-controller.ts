@@ -1,26 +1,31 @@
+import { negociacoesDoDia } from "./../intenfaces/negociacoes-do-dia";
+import { NegociacoesServices } from "./../services/negociacoes-services.js";
+import { domInject } from "../decorators/dom-inject.js";
+import { inspec } from "../decorators/inspec.js";
 import { logarTempoDeExecucao } from "../decorators/logar-tempo-de-execucao.js";
 import { DiasDaSemana } from "../enums/dias-da-semana.js";
 import { Negociacao } from "../models/negociacao.js";
 import { Negociacoes } from "../models/negociacoes.js";
 import { MensagemView } from "../views/mensagem-view.js";
 import { NegociacoesView } from "../views/negociacoes-view.js";
+import { imprimir } from "../utils/imprimir.js";
 
 export class NegociacaoController {
+  @domInject("#data")
   private inputData: HTMLInputElement;
+  @domInject("#quantidade")
   private inputQuantidade: HTMLInputElement;
+  @domInject("#valor")
   private inputValor: HTMLInputElement;
-  private negociacoes = new Negociacoes();
-  private negociacoesView = new NegociacoesView("#negociacoesView", true);
-  private mensagemView = new MensagemView("#mensagemView");
 
+  private negociacoes = new Negociacoes();
+  private negociacoesView = new NegociacoesView("#negociacoesView");
+  private mensagemView = new MensagemView("#mensagemView");
+  private negociacoesService = new NegociacoesServices();
   constructor() {
-    this.inputData = <HTMLInputElement>document.querySelector("#data");
-    this.inputQuantidade = document.querySelector(
-      "#quantidade"
-    ) as HTMLInputElement;
-    this.inputValor = document.querySelector("#valor") as HTMLInputElement;
     this.negociacoesView.update(this.negociacoes);
   }
+  @inspec
   @logarTempoDeExecucao()
   public adiciona(): void {
     /*
@@ -38,8 +43,27 @@ export class NegociacaoController {
     }
 
     this.negociacoes.adiciona(negociacao);
+    imprimir(negociacao, this.negociacoes);
     this.limparFormulario();
     this.atualizaView();
+  }
+
+  importaDados() {
+    this.negociacoesService
+      .obterNegociacoesDoDia()
+      .then((negociacoesDoDia) => {
+        return negociacoesDoDia.filter((negociacoesDoDia) => {
+          return !this.negociacoes
+            .lista()
+            .some((negociacao) => negociacao.ehIgual(negociacoesDoDia));
+        });
+      })
+      .then((negociacoesDeHoje) => {
+        for (let negociacao of negociacoesDeHoje) {
+          this.negociacoes.adiciona(negociacao);
+        }
+        this.negociacoesView.update(this.negociacoes);
+      });
   }
 
   private ehDiaUtil(data: Date) {

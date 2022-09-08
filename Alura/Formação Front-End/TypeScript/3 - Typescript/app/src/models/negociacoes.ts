@@ -1,13 +1,22 @@
-import { Negociacao } from './negociacao.js';
+import { Modelo } from "../intenfaces/modelo.js";
+import { Negociacao } from "./negociacao.js";
 
-export class Negociacoes {
-    private negociacoes: Negociacao[] = [];
+export class Negociacoes implements Modelo<Negociacoes> {
+  private negociacoes: Negociacao[] = [];
 
-    public adiciona(negociacao: Negociacao) {
-        this.negociacoes.push(negociacao);
-    }
+  public adiciona(negociacao: Negociacao) {
+    this.negociacoes.push(negociacao);
+  }
 
-    public lista(): readonly Negociacao[] {
-        return this.negociacoes;
-    }
+  public lista(): readonly Negociacao[] {
+    return this.negociacoes;
+  }
+
+  paraTexto(): string {
+    return JSON.stringify(this.negociacoes, null, 2);
+  }
+
+  ehIgual(objeto: Negociacoes): boolean {
+    return JSON.stringify(this.negociacoes) === JSON.stringify(objeto);
+  }
 }
