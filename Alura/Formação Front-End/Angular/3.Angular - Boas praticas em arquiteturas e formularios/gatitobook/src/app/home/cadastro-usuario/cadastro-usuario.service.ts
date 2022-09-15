@@ -14,6 +14,6 @@ export class CadastroUsuarioService {
     return this.http.post(this.urlCadastroUsuario, novoUsuario);
   }
   verificarUsusuarioExistente(nomeUsuario: string) {
-    return this.http.get(`this.urlVerificarUsuario ${nomeUsuario}`);
+    return this.http.get(`${this.urlVerificarUsuario}${nomeUsuario}`);
   }
 }
