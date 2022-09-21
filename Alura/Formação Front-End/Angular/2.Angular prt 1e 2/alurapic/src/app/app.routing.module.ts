@@ -7,12 +7,17 @@ import { PhotoFormComponent } from './photos/photo-form/photo-form.component';
 import { PhotoListComponent } from './photos/photo-list/photo-list.component';
 import { SigninComponent } from './home/signin/signin.component';
 import { AuthGuard } from './core/auth/auth.guard';
+import { SignUpComponent } from './home/signup/signup.component';
 
 const routes: Routes = [
   {
     path: '',
     component: SigninComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'signup',
+    component: SignUpComponent,
   },
   {
     path: 'user/:userName',
