@@ -1,3 +1,4 @@
+import { RequiresAutenticatinGuard } from './core/auth/requires.autentication';
 import { PhotoListResolver } from './photos/photo-list/photo-list-resolver';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -22,6 +23,7 @@ const routes: Routes = [
   {
     path: 'p/add',
     component: PhotoFormComponent,
+    canActivate: [RequiresAutenticatinGuard],
   },
   {
     path: '**',

@@ -3,6 +3,7 @@
     <div class="col-md-6 text-center">
       <div class="form-group" *ngIf="!preview; else previewImage">
         <button
+          ImmediateClick
           type="button"
           (click)="fileInput.click()"
           class="btn btn-primary"
@@ -25,11 +26,7 @@
       </div>
       <ng-template #previewImage>
         <div class="text-center">
-          <app-photo
-
-            [url]="preview"
-            title="preview"
-          ></app-photo>
+          <app-photo [url]="preview" title="preview"></app-photo>
         </div>
       </ng-template>
     </div>
