@@ -1,4 +1,3 @@
-import { RequiresAutenticatinGuard } from './core/auth/requires.autentication';
 import { PhotoListResolver } from './photos/photo-list/photo-list-resolver';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -6,6 +5,8 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 
 import { PhotoFormComponent } from './photos/photo-form/photo-form.component';
 import { PhotoListComponent } from './photos/photo-list/photo-list.component';
+import { AuthGuard } from './core/auth/auth.guard';
+import { PhotoDetailComponent } from './photos/photo-details/photo-details.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -23,7 +24,11 @@ const routes: Routes = [
   {
     path: 'p/add',
     component: PhotoFormComponent,
-    canActivate: [RequiresAutenticatinGuard],
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'p/:photoid',
+    component: PhotoDetailComponent,
   },
   {
     path: '**',
