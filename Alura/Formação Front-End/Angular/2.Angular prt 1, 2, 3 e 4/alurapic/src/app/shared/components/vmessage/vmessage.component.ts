@@ -1,13 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-vmessage',
-  templateUrl: './vmessage.component.html',
-  styleUrls: ['./vmessage.component.css'],
+    selector: 'ap-vmessage',
+    templateUrl: './vmessage.component.html'
 })
-export class VmessageComponent implements OnInit {
-  @Input() text = '';
-  constructor() {}
+export class VMessageComponent {
 
-  ngOnInit(): void {}
-}
+    @Input() text = '';
+ }
